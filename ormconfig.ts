@@ -5,7 +5,7 @@ export const AppDataSource = new DataSource({
   host: "localhost",
   port: 3306,
   username: "user",
-  password: "rootpassword",
+  password: "userpassword",
   database: "task_db",
   synchronize: true, //use only in development!!!
   logging: true,

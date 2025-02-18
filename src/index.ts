@@ -1,5 +1,5 @@
 import { log } from "console";
-import { AppDataSource } from "./ormconfig";
+import { AppDataSource } from "../ormconfig";
 
 AppDataSource.initialize()
 .then(() => console.log('Conntected to DB'))
