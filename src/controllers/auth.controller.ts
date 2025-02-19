@@ -28,6 +28,31 @@ export const registerUser = async (req: Request, res: Response) => {
         })
 
     }catch(error){
-        res.status(500).json({ message: 'Server error '})    
+        res.status(500).json({ message: 'Server error'})    
+    }
+}
+
+//Login user
+export const loginUser = async (req: Request, res:Response) => {
+    const { email, password} = req.body;
+
+    try{
+        const user = await userRepository.findOne({where: { email } })
+        if(!user){
+            return res.status(401).json({ message: 'Email does not exist'})
+        }
+        const isMatch = await bcrypt.compare(password, user.password)
+        if(!isMatch) {
+            return res.status(401).json({ message: 'Wrong password'})
+        }
+
+        res.json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            token: generateToken(user.id)
+        })
+    }catch(error){
+        res.status(500).json({ message: 'Server error '})
     }
 }
