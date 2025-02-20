@@ -28,10 +28,11 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
             }
 
             req.user = user;
-
+            next();
         }catch(error) {
-
+            return res.status(401).json({ message : 'Invalid token'})
         }
+    } else {
+        return res.status(401).json({message: 'No Token, authorization denied'})
     }
-
 }
