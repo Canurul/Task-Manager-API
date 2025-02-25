@@ -8,7 +8,15 @@ const userRepository = AppDataSource.getRepository(User);
 
 //Register User
 export const registerUser = async (req: Request, res: Response) => {
+    console.log('Request body:' ,req.body);
+
     const { name, email, password} = req.body;
+
+    if(!name || !email || !password) {
+
+        return res.status(400).json({ message: 'please provide name, email and password'})
+
+    }
 
     try{
         const existingUser = await userRepository.findOne( {where: { email }});
@@ -28,7 +36,7 @@ export const registerUser = async (req: Request, res: Response) => {
         })
 
     }catch(error){
-        res.status(500).json({ message: 'Server error'})    
+        res.status(500).json({ message: 'Server error. Could not create user'})    
     }
 }
 
