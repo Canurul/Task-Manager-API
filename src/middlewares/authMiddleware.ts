@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AppDataSource } from "../../ormconfig";
 import { User } from '../entities/User';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 declare global {
     namespace Express {
