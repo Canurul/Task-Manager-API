@@ -1,12 +1,14 @@
 import express from 'express';
 import { AppDataSource } from "../ormconfig";
 import dotenv from 'dotenv';
+import taskRoutes from './routes/taskRoutes';
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use('/api/tasks',taskRoutes)
 
 AppDataSource.initialize()
 .then(() => console.log('Conntected to DB'))

@@ -5,7 +5,7 @@ import { Request, Response } from 'express' ;
 const taskRepository = AppDataSource.getRepository(Task);
 
 //Create a new task
-export const createTask = async (req: Request, res: Response) => {
+export const createTask= async (req: Request, res: Response) => {
 
     const { name, description } = req.body;
     const user = req.user;

@@ -13,7 +13,7 @@ declare global {
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const protect = async (req: Request, res: Response, next: NextFunction) => {
+export const protect= async (req: Request, res: Response, next: NextFunction) => {
     let token;
 
     if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
