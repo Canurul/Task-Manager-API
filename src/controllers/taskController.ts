@@ -1,6 +1,7 @@
 import { AppDataSource } from "../../ormconfig";
 import { Task } from "../entities/Task";
 import { Request, Response } from 'express' ;
+import { User } from "../entities/User";
 
 const taskRepository = AppDataSource.getRepository(Task);
 
@@ -34,5 +35,32 @@ export const createTask= async (req: Request, res: Response) => {
     }catch(error) {
         console.error('Error creating task', error);
         res.status(401).json({ message: 'Server error creating task'});
+    }
+}
+
+//Get all tasks
+export const getAllTasks = async (req: Request, res:Response) => {
+
+    try {
+    const userId = (req.user as User).id
+
+    const taskRepository = AppDataSource.getRepository(Task);
+    const tasks = await taskRepository.find( {
+        where: { user : { id: userId }},
+        order: { createdAt: 'DESC'}
+    })
+
+    return res.status(200).json({
+        success: true,
+        count: tasks.length,
+        data: tasks
+    });
+
+    } catch (error){
+        console.error('Error getting tasks', error)
+        return res.status(500).json({
+            success: false,
+            message: 'Server Error'
+        })
     }
 }
