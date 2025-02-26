@@ -2,6 +2,7 @@ import { AppDataSource } from "../../ormconfig";
 import { Task } from "../entities/Task";
 import { Request, Response } from 'express' ;
 import { User } from "../entities/User";
+import express from "express";
 
 const taskRepository = AppDataSource.getRepository(Task);
 
@@ -39,7 +40,7 @@ export const createTask= async (req: Request, res: Response) => {
 }
 
 //Get all tasks
-export const getAllTasks = async (req: Request, res:Response) => {
+export const getAllTasks: express.RequestHandler = async (req: Request, res:Response) => {
 
     try {
     const userId = (req.user as User).id
@@ -50,7 +51,7 @@ export const getAllTasks = async (req: Request, res:Response) => {
         order: { createdAt: 'DESC'}
     })
 
-    return res.status(200).json({
+     res.status(200).json({
         success: true,
         count: tasks.length,
         data: tasks
@@ -58,7 +59,7 @@ export const getAllTasks = async (req: Request, res:Response) => {
 
     } catch (error){
         console.error('Error getting tasks', error)
-        return res.status(500).json({
+         res.status(500).json({
             success: false,
             message: 'Server Error'
         })
@@ -66,7 +67,7 @@ export const getAllTasks = async (req: Request, res:Response) => {
 }
 
 //Get single task by taskId
-export const getTaskById = async (req: Request, res:  Response) => {
+export const getTaskById: express.RequestHandler = async (req: Request, res:  Response) => {
 
     try {
         const taskId = parseInt(req.params.id)
@@ -74,7 +75,7 @@ export const getTaskById = async (req: Request, res:  Response) => {
         const userId = (req.user as User).id
 
         if(isNaN(taskId)) {
-            return res.status(400).json( {
+            res.status(400).json( {
                 success: false,
                 message: 'Invalid task ID'
             })
@@ -89,19 +90,19 @@ export const getTaskById = async (req: Request, res:  Response) => {
         });
 
        if(!task) {
-        return res.status(404).json({
+        res.status(404).json({
             success: false,
             message: 'Task not found or you do not have permission to access it'
         })
        }
-       return res.status(200).json({
+        res.status(200).json({
         success: true,
         message:'Here is your tasks',
         data: task
        })
     } catch(error) {
         console.error('Error getting task by ID', error)
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
             message: 'Server Error'
         })
