@@ -64,3 +64,48 @@ export const getAllTasks = async (req: Request, res:Response) => {
         })
     }
 }
+
+//Get single task by taskId
+export const getTaskById = async (req: Request, res:  Response) => {
+
+    try {
+        const taskId = parseInt(req.params.id)
+
+        const userId = (req.user as User).id
+
+        if(isNaN(taskId)) {
+            return res.status(400).json( {
+                success: false,
+                message: 'Invalid task ID'
+            })
+        }
+
+        const taskRepository = AppDataSource.getRepository(Task);
+        const task = await taskRepository.findOne({
+            where:{
+                id: taskId,
+                user: {id: userId}
+            }
+        });
+
+       if(!task) {
+        return res.status(404).json({
+            success: false,
+            message: 'Task not found or you do not have permission to access it'
+        })
+       }
+       return res.status(200).json({
+        success: true,
+        message:'Here is your tasks',
+        data: task
+       })
+    } catch(error) {
+        console.error('Error getting task by ID', error)
+        return res.status(500).json({
+            success: false,
+            message: 'Server Error'
+        })
+
+    }
+
+}
